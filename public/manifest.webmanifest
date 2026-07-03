@@ -1,6 +1,6 @@
 {
-  "name": "Calculator",
-  "short_name": "Calculator",
+  "name": "HideChat",
+  "short_name": "HideChat",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

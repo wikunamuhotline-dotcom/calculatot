@@ -1,6 +1,6 @@
 {
   "appId": "com.chatsite.app",
-  "appName": "ChatSite",
+  "appName": "HideChat",
   "webDir": "public",
   "server": {
     "url": "https://YOUR-RENDER-APP.onrender.com",

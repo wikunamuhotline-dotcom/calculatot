@@ -98,7 +98,7 @@ async function renderAuth() {
   const error = document.querySelector("#auth-error");
   document.querySelector("#google-login").onclick = () => {
     if (!config.googleClientId || !window.google) {
-      error.textContent = "Google Client ID එක තවම .env එකට දාලා නැහැ.";
+      error.textContent = "Google sign-in is not configured yet.";
       return;
     }
     google.accounts.id.initialize({ client_id: config.googleClientId, callback: finishGoogleLogin });
@@ -166,15 +166,20 @@ async function loadConversations(shouldRender = true) {
 }
 
 function renderShell() {
-  const titles = { chats: "Chats", add: "Add Friends", profile: "Profile" };
+  const titles = { chats: "HideChat", add: "Add Friends", profile: "Profile" };
   app.innerHTML = `
     <section class="phone-app">
-      <header class="topbar"><div><h1>${titles[currentView]}</h1><small>@${me.username}</small></div></header>
+      <header class="topbar">
+        <div class="status-row"><span>${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span><span>4G 29%</span></div>
+        <div class="brand-row"><h1>${titles[currentView]}</h1><div class="top-actions"><button type="button">Camera</button><button type="button">More</button></div></div>
+        ${currentView === "chats" ? `<div class="chat-search"><span>Search</span></div><div class="filter-chips"><button class="active">All</button><button>Unread</button><button>Favorites</button><button>Groups</button></div>` : ""}
+      </header>
       <section class="content">${currentView === "chats" ? chatsHtml() : currentView === "add" ? addHtml() : profileHtml()}</section>
+      ${currentView === "chats" ? `<button class="compose-fab" data-nav="add">+</button>` : ""}
       <nav class="bottom-nav">
-        <button class="${currentView === "chats" ? "active" : ""}" data-nav="chats">Chats</button>
-        <button class="${currentView === "add" ? "active" : ""}" data-nav="add">Add</button>
-        <button class="${currentView === "profile" ? "active" : ""}" data-nav="profile">Profile</button>
+        <button class="${currentView === "chats" ? "active" : ""}" data-nav="chats"><span class="nav-icon">Chat</span>Chats</button>
+        <button class="${currentView === "add" ? "active" : ""}" data-nav="add"><span class="nav-icon">Add</span>Add</button>
+        <button class="${currentView === "profile" ? "active" : ""}" data-nav="profile"><span class="nav-icon">Me</span>Profile</button>
       </nav>
     </section>`;
 }
@@ -184,13 +189,18 @@ function chatsHtml() {
     .sort((a, b) => Number(b.pinned) - Number(a.pinned))
     .map((chat) => {
       const other = chat.participants.find((user) => user.id !== me.id) || chat.participants[0];
+      const time = chat.lastMessageAt ? new Date(chat.lastMessageAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
       return `<article class="chat-row" data-open-chat="${chat.id}">
-        ${avatar(other)}<div><p class="row-title">${escapeHtml(other.name || other.username)}</p><p class="row-sub">${escapeHtml(chat.lastMessageText || `@${other.username}`)}</p></div>
-        <span class="pin">${chat.pinned ? "Pin" : ""}</span>
+        ${avatar(other)}
+        <div class="chat-copy"><p class="row-title">${escapeHtml(other.name || other.username)}</p><p class="row-sub">${escapeHtml(chat.lastMessageText || `@${other.username}`)}</p></div>
+        <div class="chat-meta"><span>${time}</span>${chat.pinned ? `<span class="pin">Pin</span>` : ""}</div>
       </article>`;
     })
     .join("");
-  return `<div class="chat-list">${rows || `<p class="row-sub">Search friends and start your first chat.</p>`}</div>`;
+  return `<div class="chat-list">
+    <article class="archive-row"><span class="archive-icon">Archive</span><strong>Archived</strong><span>0</span></article>
+    ${rows || `<p class="empty-state">Search friends and start your first chat.</p>`}
+  </div>`;
 }
 
 function addHtml() {
@@ -294,10 +304,10 @@ function renderChatRoom() {
   document.documentElement.style.setProperty("--wallpaper", me.wallpaper ? `url("${me.wallpaper}") center/cover` : "#0f1514");
   app.innerHTML = `
     <section class="chat-room">
-      <header class="room-head"><button id="back">‹</button>${avatar(other)}<div><strong>${escapeHtml(other.name || other.username)}</strong><small>@${escapeHtml(other.username)}</small></div><button id="pin-chat">⌖</button></header>
+      <header class="room-head"><button id="back">&lt;</button>${avatar(other)}<div><strong>${escapeHtml(other.name || other.username)}</strong><small>@${escapeHtml(other.username)}</small></div><button id="pin-chat">Pin</button></header>
       <section id="messages" class="messages">${activeMessages.map(messageHtml).join("")}</section>
-      <section class="stickers ${stickersOpen ? "" : "hidden"}">${["😀","😂","❤️","🔥","👍","🙏","🎉","😎"].map((s) => `<button data-sticker="${s}">${s}</button>`).join("")}</section>
-      <form id="composer" class="composer"><button type="button" id="toggle-stickers">☺</button><label class="file-label">＋<input id="file-input" type="file" /></label><input id="message-text" placeholder="Message" autocomplete="off" /><button class="send">Send</button></form>
+      <section class="stickers ${stickersOpen ? "" : "hidden"}">${[":)", ":D", "<3", "Fire", "OK", "Yes", "Party", "Cool"].map((s) => `<button data-sticker="${s}">${s}</button>`).join("")}</section>
+      <form id="composer" class="composer"><button type="button" id="toggle-stickers">:)</button><label class="file-label">+<input id="file-input" type="file" /></label><input id="message-text" placeholder="Message" autocomplete="off" /><button class="send">Send</button></form>
     </section>`;
   const messages = document.querySelector("#messages");
   messages.scrollTop = messages.scrollHeight;
