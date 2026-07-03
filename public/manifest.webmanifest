@@ -1,6 +1,7 @@
 {
   "name": "HideChat",
   "short_name": "HideChat",
+  "description": "A private hidden chat app with secure Google sign-in, profiles, media sharing, and customizable chat themes.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -8,15 +9,15 @@
   "theme_color": "#075e54",
   "icons": [
     {
-      "src": "/icons/icon-192.svg",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-512.svg",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
