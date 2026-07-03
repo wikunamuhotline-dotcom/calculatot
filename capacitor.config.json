@@ -3,7 +3,7 @@
   "appName": "HideChat",
   "webDir": "public",
   "server": {
-    "url": "https://YOUR-RENDER-APP.onrender.com",
+    "url": "https://calculatot-khaki.vercel.app",
     "cleartext": false
   }
 }
