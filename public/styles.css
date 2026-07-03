@@ -33,15 +33,18 @@ button { cursor: pointer; }
 .calc-grid .utility { background: #9ba1a6; color: #151719; font-size: 19px; }
 .calc-grid .operator, .calc-grid .equals { background: #d98c34; }
 
-.auth-screen { min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: var(--panel); }
-.auth-box { width: min(420px, 100%); display: grid; gap: 18px; }
+.auth-screen { min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at top, rgba(37,211,102,.16), transparent 34%), var(--panel); }
+.auth-box { width: min(420px, 100%); display: grid; gap: 18px; padding: 26px; border: 1px solid rgba(255,255,255,.08); border-radius: 18px; background: rgba(17,27,33,.94); box-shadow: 0 24px 80px rgba(0,0,0,.34); }
+.auth-mark { width: 56px; height: 56px; display: grid; place-items: center; border-radius: 18px; background: var(--accent); color: #062114; font-size: 28px; font-weight: 900; }
 .auth-box h1 { margin: 0; font-size: 30px; }
 .auth-box p { margin: 0; color: var(--muted); line-height: 1.5; }
 .google-button, .dev-button, .primary-button, .icon-button {
   min-height: 46px; border: 0; border-radius: 999px; background: var(--accent); color: #062114; font-weight: 700; padding: 0 16px;
 }
-.google-button { display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff; color: #1f1f1f; }
-.google-icon { width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%; color: #4285f4; font-weight: 900; }
+.google-button { min-height: 58px; display: flex; align-items: center; justify-content: center; gap: 12px; background: #fff; color: #1f1f1f; box-shadow: 0 10px 26px rgba(0,0,0,.22); }
+.google-button span:last-child { display: grid; gap: 2px; text-align: left; }
+.google-button small { color: #5f6368; font-size: 12px; font-weight: 500; }
+.google-icon { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; color: #4285f4; font-weight: 900; font-size: 21px; }
 .dev-button { background: #26343a; color: var(--text); }
 .error { color: #ffb0a6; min-height: 20px; }
 
@@ -86,6 +89,8 @@ button { cursor: pointer; }
 .profile-form { padding-bottom: 80px; }
 .setting-card { grid-template-columns: 1fr; align-items: stretch; }
 .setting-card label { display: grid; gap: 8px; color: var(--muted); }
+.media-setting input[type="file"] { padding: 10px; border-radius: 12px; background: #26343a; color: var(--text); }
+.media-setting input[type="file"]::file-selector-button { border: 0; border-radius: 999px; background: var(--accent); color: #062114; font-weight: 700; padding: 8px 12px; margin-right: 10px; }
 .swatches { display: flex; gap: 8px; flex-wrap: wrap; }
 .swatch { width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,.35); }
 

@@ -83,9 +83,13 @@ async function renderAuth() {
   app.innerHTML = `
     <section class="auth-screen">
       <div class="auth-box">
-        <h1>Chat Login</h1>
-        <p>Google account එකෙන් sign in වුණාම unique @username එකක් auto හැදෙනවා.</p>
-        <button id="google-login" class="google-button"><span class="google-icon">G</span> Continue with Google</button>
+        <div class="auth-mark">C</div>
+        <h1>Sign in to Chat</h1>
+        <p>Use your Google account to create a private profile with a unique @username.</p>
+        <button id="google-login" class="google-button">
+          <span class="google-icon">G</span>
+          <span><strong>Continue with Google</strong><small>Secure account sign in</small></span>
+        </button>
         <button id="dev-login" class="dev-button">Dev test account</button>
         <p id="auth-error" class="error"></p>
       </div>
@@ -198,8 +202,14 @@ function profileHtml() {
     <div class="setting-card">${avatar(me)}<label>Name<input name="name" value="${escapeAttr(me.name || "")}" /></label></div>
     <div class="setting-card"><label>Username<input name="username" value="@${escapeAttr(me.username || "")}" /></label></div>
     <div class="setting-card"><label>Mobile number<input name="mobile" value="${escapeAttr(me.mobile || "")}" placeholder="+94..." /></label></div>
-    <div class="setting-card"><label>Profile picture URL<input name="avatarUrl" value="${escapeAttr(me.avatarUrl || "")}" /></label></div>
-    <div class="setting-card"><label>Chat wallpaper URL<input name="wallpaper" value="${escapeAttr(me.wallpaper || "")}" /></label></div>
+    <div class="setting-card media-setting">
+      <label>Profile picture<input id="avatar-upload" type="file" accept="image/*" /></label>
+      <p id="avatar-upload-status" class="row-sub">${me.avatarUrl ? "Profile picture uploaded" : "Choose an image from your device"}</p>
+    </div>
+    <div class="setting-card media-setting">
+      <label>Chat wallpaper<input id="wallpaper-upload" type="file" accept="image/*" /></label>
+      <p id="wallpaper-upload-status" class="row-sub">${me.wallpaper ? "Wallpaper uploaded" : "Choose an image from your device"}</p>
+    </div>
     <div class="setting-card"><p class="row-sub">Theme</p><div class="swatches">${Object.keys(themes).map((key) => `<button type="button" class="swatch" data-theme="${key}" style="background:${themes[key][0]}"></button>`).join("")}</div></div>
     <button class="primary-button">Save profile</button>
     <button id="new-account" type="button" class="dev-button">Add another account</button>
@@ -231,6 +241,16 @@ app.addEventListener("click", async (event) => {
 });
 
 app.addEventListener("input", async (event) => {
+  if (event.target.id === "avatar-upload") {
+    await uploadProfileMedia(event.target.files[0], "avatarUrl", "#avatar-upload-status", "Profile picture uploaded");
+    return;
+  }
+
+  if (event.target.id === "wallpaper-upload") {
+    await uploadProfileMedia(event.target.files[0], "wallpaper", "#wallpaper-upload-status", "Wallpaper uploaded");
+    return;
+  }
+
   if (event.target.id !== "friend-search") return;
   const q = event.target.value.trim();
   const results = document.querySelector("#search-results");
@@ -318,6 +338,24 @@ async function uploadAttachment(event) {
   form.append("file", file);
   const attachment = await api("/api/upload", { method: "POST", form });
   await api(`/api/conversations/${activeConversation.id}/messages`, { method: "POST", body: { attachment } });
+}
+
+async function uploadProfileMedia(file, field, statusSelector, successText) {
+  if (!file) return;
+  const status = document.querySelector(statusSelector);
+  status.textContent = "Uploading...";
+  try {
+    const form = new FormData();
+    form.append("file", file);
+    const upload = await api("/api/upload", { method: "POST", form });
+    const result = await saveProfile({ [field]: upload.url });
+    me = result.user;
+    localStorage.setItem("chat_user", JSON.stringify(me));
+    status.textContent = successText;
+    renderShell();
+  } catch (error) {
+    status.textContent = error.message || "Upload failed";
+  }
 }
 
 function messageHtml(message) {
