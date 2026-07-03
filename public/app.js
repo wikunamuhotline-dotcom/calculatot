@@ -9,6 +9,7 @@ let conversations = [];
 let activeConversation = null;
 let activeMessages = [];
 let stickersOpen = false;
+let messagePoll;
 
 const themes = {
   green: ["#075e54", "#25d366", "#005c4b"],
@@ -121,6 +122,7 @@ function saveSession(result) {
 
 function connectSocket() {
   if (socket) socket.disconnect();
+  if (typeof io !== "function") return;
   socket = io({ auth: { token } });
   socket.on("message:new", (message) => {
     if (activeConversation?.id === String(message.conversation)) {
@@ -129,6 +131,28 @@ function connectSocket() {
     }
     loadConversations(false);
   });
+}
+
+function startPollingMessages() {
+  stopPollingMessages();
+  messagePoll = setInterval(async () => {
+    if (!activeConversation) return;
+    try {
+      const result = await api(`/api/conversations/${activeConversation.id}/messages`);
+      const nextMessages = result.messages || [];
+      if (nextMessages.length !== activeMessages.length || nextMessages.at(-1)?.id !== activeMessages.at(-1)?.id) {
+        activeMessages = nextMessages;
+        renderChatRoom();
+      }
+    } catch {
+      stopPollingMessages();
+    }
+  }, 2500);
+}
+
+function stopPollingMessages() {
+  if (messagePoll) clearInterval(messagePoll);
+  messagePoll = null;
 }
 
 async function loadConversations(shouldRender = true) {
@@ -241,6 +265,7 @@ async function openConversation(id) {
   const result = await api(`/api/conversations/${id}/messages`);
   activeMessages = result.messages || [];
   if (socket) socket.emit("conversation:join", id);
+  if (!socket) startPollingMessages();
   renderChatRoom();
 }
 
@@ -259,6 +284,7 @@ function renderChatRoom() {
   document.querySelector("#back").onclick = () => {
     activeConversation = null;
     stickersOpen = false;
+    stopPollingMessages();
     loadConversations();
   };
   document.querySelector("#pin-chat").onclick = () => api(`/api/conversations/${activeConversation.id}/pin`, { method: "PATCH" }).then(() => loadConversations(false));
