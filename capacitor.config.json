@@ -1,0 +1,9 @@
+{
+  "appId": "com.chatsite.app",
+  "appName": "ChatSite",
+  "webDir": "public",
+  "server": {
+    "url": "https://YOUR-RENDER-APP.onrender.com",
+    "cleartext": false
+  }
+}

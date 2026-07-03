@@ -1,0 +1,95 @@
+:root {
+  color-scheme: dark;
+  font-family: Arial, Helvetica, sans-serif;
+  --brand: #075e54;
+  --accent: #25d366;
+  --panel: #111b21;
+  --surface: #202c33;
+  --bubble: #005c4b;
+  --text: #eef6f4;
+  --muted: #9eb0ad;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100dvh; background: #101316; color: var(--text); }
+button, input { font: inherit; }
+button { cursor: pointer; }
+.hidden { display: none !important; }
+
+.calculator {
+  width: 100vw;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(180px, 1fr) auto;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+  background: #1b1f24;
+}
+.calc-top { display: flex; gap: 8px; padding: 4px 2px 10px; }
+.calc-dot { width: 10px; height: 10px; border-radius: 50%; background: #697077; }
+.calc-display { display: flex; align-items: end; justify-content: end; overflow: hidden; padding: 18px 4px 28px; font-size: clamp(54px, 18vw, 82px); line-height: 1; }
+.calc-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.calc-grid button { aspect-ratio: 1; border: 0; border-radius: 50%; background: #31373d; color: #fffaf2; font-size: clamp(22px, 7vw, 30px); }
+.calc-grid .wide { grid-column: span 2; aspect-ratio: auto; border-radius: 999px; text-align: left; padding-left: 30px; }
+.calc-grid .utility { background: #9ba1a6; color: #151719; font-size: 19px; }
+.calc-grid .operator, .calc-grid .equals { background: #d98c34; }
+
+.auth-screen { min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: var(--panel); }
+.auth-box { width: min(420px, 100%); display: grid; gap: 18px; }
+.auth-box h1 { margin: 0; font-size: 30px; }
+.auth-box p { margin: 0; color: var(--muted); line-height: 1.5; }
+.google-button, .dev-button, .primary-button, .icon-button {
+  min-height: 46px; border: 0; border-radius: 999px; background: var(--accent); color: #062114; font-weight: 700; padding: 0 16px;
+}
+.google-button { display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff; color: #1f1f1f; }
+.google-icon { width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%; color: #4285f4; font-weight: 900; }
+.dev-button { background: #26343a; color: var(--text); }
+.error { color: #ffb0a6; min-height: 20px; }
+
+.phone-app { width: 100vw; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; background: var(--panel); }
+.topbar { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: max(12px, env(safe-area-inset-top)) 14px 12px; background: var(--brand); }
+.topbar h1 { margin: 0; font-size: 20px; }
+.topbar small { display: block; color: rgba(255,255,255,.76); }
+.content { min-height: 0; overflow-y: auto; }
+.bottom-nav { display: grid; grid-template-columns: repeat(3, 1fr); background: #182229; border-top: 1px solid rgba(255,255,255,.08); padding-bottom: env(safe-area-inset-bottom); }
+.bottom-nav button { min-height: 56px; border: 0; background: transparent; color: var(--muted); }
+.bottom-nav button.active { color: var(--accent); font-weight: 700; }
+
+.chat-list, .search-results, .profile-form { display: grid; gap: 10px; padding: 12px; }
+.chat-row, .user-row, .setting-card {
+  display: grid; grid-template-columns: 48px 1fr auto; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; background: #162229;
+}
+.avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #31434a; display: grid; place-items: center; font-weight: 700; }
+.row-title { margin: 0; font-weight: 700; }
+.row-sub { margin: 3px 0 0; color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pin { color: var(--accent); }
+
+.search-box, .profile-form input, .composer input {
+  min-height: 44px; width: 100%; border: 0; border-radius: 999px; background: #26343a; color: var(--text); padding: 0 14px; outline: none;
+}
+.search-wrap { padding: 12px; position: sticky; top: 0; background: var(--panel); }
+
+.chat-room { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; background: var(--panel); }
+.room-head { display: grid; grid-template-columns: auto 40px 1fr auto; align-items: center; gap: 10px; padding: max(10px, env(safe-area-inset-top)) 10px 10px; background: var(--brand); }
+.room-head button { border: 0; background: transparent; color: #fff; font-size: 22px; }
+.messages { display: flex; flex-direction: column; gap: 8px; padding: 12px 10px; overflow-y: auto; background: var(--wallpaper, #0f1514); }
+.message { max-width: 82%; padding: 8px 10px; border-radius: 8px; background: var(--surface); line-height: 1.4; }
+.message.mine { align-self: flex-end; background: var(--bubble); }
+.message img { max-width: 220px; border-radius: 8px; display: block; }
+.message time { display: block; margin-top: 4px; font-size: 11px; color: rgba(255,255,255,.64); text-align: right; }
+.composer { display: grid; grid-template-columns: 44px 44px 1fr 64px; gap: 7px; padding: 8px 8px max(8px, env(safe-area-inset-bottom)); background: #101514; }
+.composer button, .file-label { min-height: 44px; border: 0; border-radius: 999px; background: #26343a; color: var(--text); display: grid; place-items: center; }
+.composer .send { background: var(--accent); color: #062114; font-weight: 700; }
+.file-label input { display: none; }
+.stickers { display: flex; gap: 8px; padding: 8px; overflow-x: auto; background: #101514; }
+.stickers button { border: 0; border-radius: 999px; background: #26343a; min-width: 42px; min-height: 38px; font-size: 20px; }
+
+.profile-form { padding-bottom: 80px; }
+.setting-card { grid-template-columns: 1fr; align-items: stretch; }
+.setting-card label { display: grid; gap: 8px; color: var(--muted); }
+.swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.swatch { width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,.35); }
+
+@media (min-width: 761px) {
+  body { display: grid; place-items: center; background: #0c1113; }
+  .calculator, .phone-app, .chat-room, .auth-screen { width: min(430px, 100vw); min-height: min(920px, 100dvh); box-shadow: 0 26px 80px rgba(0,0,0,.38); }
+}
