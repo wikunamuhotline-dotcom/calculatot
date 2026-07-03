@@ -23,6 +23,7 @@ render();
 function render() {
   if (!token || !me) return renderCalculator();
   applyTheme(me.theme || "green");
+  applyMode(me.mode || "dark");
   if (activeConversation) return renderChatRoom();
   renderShell();
 }
@@ -239,6 +240,7 @@ function profileHtml() {
       <p id="wallpaper-upload-status" class="row-sub">${me.wallpaper ? "Wallpaper uploaded" : "Choose an image from your device"}</p>
     </div>
     <div class="setting-card"><p class="row-sub">Theme</p><div class="swatches">${Object.keys(themes).map((key) => `<button type="button" class="swatch" data-theme="${key}" style="background:${themes[key][0]}"></button>`).join("")}</div></div>
+    <div class="setting-card"><p class="row-sub">Display mode</p><div class="mode-toggle"><button type="button" class="${(me.mode || "dark") === "dark" ? "active" : ""}" data-mode="dark">Dark</button><button type="button" class="${me.mode === "light" ? "active" : ""}" data-mode="light">Light</button></div></div>
     <button class="primary-button">Save profile</button>
     <button id="new-account" type="button" class="dev-button">Add another account</button>
     <button id="logout" type="button" class="dev-button">Log out</button>
@@ -259,6 +261,13 @@ app.addEventListener("click", async (event) => {
     me.theme = theme.dataset.theme;
     applyTheme(me.theme);
     await saveProfile({ theme: me.theme });
+    renderShell();
+  }
+  const mode = event.target.closest("[data-mode]");
+  if (mode) {
+    me.mode = mode.dataset.mode;
+    applyMode(me.mode);
+    await saveProfile({ mode: me.mode });
     renderShell();
   }
   if (event.target.closest("#logout")) logout();
@@ -429,6 +438,10 @@ function applyTheme(name) {
   document.documentElement.style.setProperty("--brand", brand);
   document.documentElement.style.setProperty("--accent", accent);
   document.documentElement.style.setProperty("--bubble", bubble);
+}
+
+function applyMode(mode) {
+  document.documentElement.dataset.mode = mode === "light" ? "light" : "dark";
 }
 
 function avatar(user) {

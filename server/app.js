@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
     avatarUrl: String,
     mobile: String,
     theme: { type: String, default: "green" },
+    mode: { type: String, default: "dark" },
     wallpaper: String,
   },
   { timestamps: true }
@@ -122,6 +123,7 @@ function publicUser(user) {
     avatarUrl: user.avatarUrl,
     mobile: user.mobile,
     theme: user.theme,
+    mode: user.mode,
     wallpaper: user.wallpaper,
   };
 }
@@ -165,7 +167,7 @@ app.get("/api/me", auth, async (req, res) => {
 
 app.patch("/api/me", auth, async (req, res) => {
   const updates = {};
-  ["name", "mobile", "theme", "wallpaper", "avatarUrl"].forEach((key) => {
+  ["name", "mobile", "theme", "mode", "wallpaper", "avatarUrl"].forEach((key) => {
     if (req.body[key] !== undefined) updates[key] = req.body[key];
   });
   if (req.body.username) {
