@@ -169,12 +169,30 @@ function renderShell() {
   const titles = { chats: "HideChat", add: "Add Friends", profile: "Profile" };
   app.innerHTML = `
     <section class="phone-app">
+      <aside class="desktop-rail">
+        <div class="rail-logo">H</div>
+        <button class="${currentView === "chats" ? "active" : ""}" data-nav="chats">Chats</button>
+        <button class="${currentView === "add" ? "active" : ""}" data-nav="add">Add</button>
+        <button class="${currentView === "profile" ? "active" : ""}" data-nav="profile">Me</button>
+        <span></span>
+        <button data-nav="profile">Settings</button>
+      </aside>
+      <section class="desktop-list">
       <header class="topbar">
         <div class="status-row"><span>${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</span><span>4G 29%</span></div>
         <div class="brand-row"><h1>${titles[currentView]}</h1><div class="top-actions"><button type="button">Camera</button><button type="button">More</button></div></div>
         ${currentView === "chats" ? `<div class="chat-search"><span>Search</span></div><div class="filter-chips"><button class="active">All</button><button>Unread</button><button>Favorites</button><button>Groups</button></div>` : ""}
       </header>
       <section class="content">${currentView === "chats" ? chatsHtml() : currentView === "add" ? addHtml() : profileHtml()}</section>
+      </section>
+      <section class="desktop-empty">
+        <div class="desktop-empty-inner">
+          <div class="desktop-empty-mark">H</div>
+          <h2>HideChat for Desktop</h2>
+          <p>Send private messages, share files, and keep your chats close across devices.</p>
+        </div>
+        <p class="desktop-encryption">Your personal messages stay private.</p>
+      </section>
       ${currentView === "chats" ? `<button class="compose-fab" data-nav="add">+</button>` : ""}
       <nav class="bottom-nav">
         <button class="${currentView === "chats" ? "active" : ""}" data-nav="chats"><span class="nav-icon">Chat</span>Chats</button>
